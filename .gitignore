@@ -66,4 +66,4 @@ yarn.lock
 
 lib
 
-test/temp
+test/temp/upload_*

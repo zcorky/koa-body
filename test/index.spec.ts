@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 import * as Koa from 'koa';
 import onerror from '@koex/onerror';
 // import * as router from '@zcorky/koa-router';
@@ -394,7 +395,7 @@ describe('koa body', () => {
       app.use(bodyParser({
         enableTypes: ['multipart'],
         formidable: {
-          uploadDir: __dirname + '/temp',
+          uploadDir: path.join(__dirname, 'temp'),
         },
       }));
 
