@@ -1,10 +1,10 @@
 {
-  "name": "@zcorky/koa-body",
+  "name": "@koex/body",
   "version": "0.0.1",
-  "description": "body parser for koa",
+  "description": "body parser for koa extend",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "repository": "https://github.com/zcorky/koa-body",
+  "repository": "https://github.com/koexjs/body",
   "author": "Zero",
   "license": "MIT",
   "scripts": {
@@ -19,11 +19,11 @@
     "@types/koa": "^2.0.47",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.9.4",
-    "@zcorky/koa-onerror": "^0.0.1",
-    "@zcorky/koa-router": "^0.0.4",
+    "@koex/onerror": "^0.0.1",
+    "@koex/router": "^0.0.1",
     "coveralls": "^3.0.2",
+    "husky": "^1.2.0",
     "koa": "^2.6.2",
-    "koa-body": "^4.0.4",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
     "rimraf": "^2.6.2",
@@ -39,6 +39,11 @@
   "files": [
     "lib/"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
+  },
   "nyc": {
     "check-coverage": true,
     "lines": 60,
@@ -63,6 +68,6 @@
   },
   "dependencies": {
     "@zcorky/is": "^1.0.1",
-    "parameter": "^3.4.0"
+    "co-body": "^6.0.0"
   }
 }

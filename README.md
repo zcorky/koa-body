@@ -1,27 +1,27 @@
-# koa-body
+# body
 
-[![NPM version](https://img.shields.io/npm/v/@zcorky/koa-body.svg?style=flat)](https://www.npmjs.com/package/@zcorky/koa-body)
-[![Coverage Status](https://img.shields.io/coveralls/zcorky/koa-body.svg?style=flat)](https://coveralls.io/r/zcorky/koa-body)
-[![Dependencies](https://david-dm.org/@zcorky/koa-body/status.svg)](https://david-dm.org/@zcorky/koa-body)
-[![Build Status](https://travis-ci.com/zcorky/koa-body.svg?branch=master)](https://travis-ci.com/zcorky/koa-body)
-![license](https://img.shields.io/github/license/zcorky/koa-body.svg)
-[![issues](https://img.shields.io/github/issues/zcorky/koa-body.svg)](https://github.com/zcorky/koa-body/issues)
+[![NPM version](https://img.shields.io/npm/v/@koex/body.svg?style=flat)](https://www.npmjs.com/package/@koex/body)
+[![Coverage Status](https://img.shields.io/coveralls/koexjs/body.svg?style=flat)](https://coveralls.io/r/koexjs/body)
+[![Dependencies](https://img.shields.io/david/koexjs/body.svg)](https://github.com/koexjs/body)
+[![Build Status](https://travis-ci.com/koexjs/body.svg?branch=master)](https://travis-ci.com/koexjs/body)
+![license](https://img.shields.io/github/license/koexjs/body.svg)
+[![issues](https://img.shields.io/github/issues/koexjs/body.svg)](https://github.com/koexjs/body/issues)
 
-> body parser for Koa.
+> body parser for koa extend.
 
 ### Install
 
 ```
-$ npm install @zcorky/koa-body
+$ npm install @koex/body
 ```
 
 ### Usage
 
 ```javascript
 // See more in test
-import onerror from '@zcorky/onerror';
-import bodyParser from '@zcorky/koa-body';
-import * as router from '@zcorky/koa-router';
+import onerror from '@koex/onerror';
+import bodyParser from '@koex/body';
+import * as router from '@koex/router';
 
 import * as Koa from 'koa';
 const app = new Koa();

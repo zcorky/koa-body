@@ -1,5 +1,5 @@
 import * as Koa from 'koa';
-import onerror from '@zcorky/koa-onerror';
+import onerror from '@koex/onerror';
 // import * as router from '@zcorky/koa-router';
 import * as request from 'supertest';
 import 'should';

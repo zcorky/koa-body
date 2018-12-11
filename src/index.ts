@@ -34,7 +34,7 @@ export interface Options {
 
   /**
    * support custom error handle, if `koa-body` throw an error, you can customize the response like:
-   * 
+   *
    * app.use(bodyParser({
    *  onerror(err, ctx) {
    *    ctx.throw(422, 'body parse error');
@@ -128,7 +128,7 @@ export default (options: Options = {}): Middleware => {
   const jsonTypes =  extend(DEFAULTS.jsonTypes, options.jsonTypes);
   const formTypes =  extend(DEFAULTS.formTypes, options.formTypes);
   const textTypes =  extend(DEFAULTS.textTypes, options.textTypes);
-  
+
   const returnRawBody = options.returnRawBody || DEFAULTS.returnRawBody;
 
   return async function bodyParser(ctx: Context, next: () => Promise<void>) {
