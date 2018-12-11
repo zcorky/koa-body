@@ -2,14 +2,17 @@ import { Context, Middleware } from 'koa';
 import { undefined as isUndef } from '@zcorky/is';
 import * as parser from 'co-body';
 
+import { formy, Options as MultipartOptions, Multipart as MultipartReturn } from './formy';
+
 declare module 'koa' {
   export interface Request {
     body: Body;
     rawBody: string;
+    files: MultipartReturn['files'];
   }
 }
 
-export type SupportType = 'json' | 'form' | 'text';
+export type SupportType = 'json' | 'form' | 'text' | 'multipart';
 
 export interface Body {
   [key: string]: any;
@@ -17,13 +20,15 @@ export interface Body {
 
 export interface Parsed {
   parsed?: Body;
-  raw: string;
+  raw?: string;
+  files?: MultipartReturn['files'];
 };
 
 export interface EnableTypes {
   json?: boolean;
   form?: boolean;
   text?: boolean;
+  multipart?: boolean;
 }
 
 export interface Options {
@@ -73,6 +78,13 @@ export interface Options {
   textTypes?: string[];
 
   /**
+   * support extend text types.
+   * Default is:
+   *  multipart
+   */
+  multipartTypes?: string[];
+
+  /**
    * limit of `json` body. Default is `1mb`.
    */
   jsonLimit?: number | string;
@@ -87,6 +99,11 @@ export interface Options {
    * limit of `text` body. Default is `1mb`.
    */
   textLimit?: number | string;
+
+  /**
+   * multipart options
+   */
+  formidable?: MultipartOptions;
 
   /**
    * whether return rawBody, then set rawBody to ctx.request, make you can visit ctx.request.rawBody.
@@ -113,6 +130,9 @@ const DEFAULTS = {
   textTypes: [
     'text/plain',
   ],
+  multipartTypes: [
+    'multipart/form-data',
+  ],
   // raw
   returnRawBody: true,
 };
@@ -123,11 +143,14 @@ const DEFAULTS = {
 export default (options: Options = {}): Middleware => {
   const detectJSON = options.detectJSON;
   const onerror = options.onerror;
-  const enableTypes = isUndef(options.enableTypes) ? DEFAULTS.enableTypes : toEnable(options.enableTypes) as EnableTypes;
+  const enableTypes = isUndef(options.enableTypes)
+    ? DEFAULTS.enableTypes as EnableTypes
+    : toEnable(options.enableTypes) as EnableTypes;
 
   const jsonTypes =  extend(DEFAULTS.jsonTypes, options.jsonTypes);
   const formTypes =  extend(DEFAULTS.formTypes, options.formTypes);
   const textTypes =  extend(DEFAULTS.textTypes, options.textTypes);
+  const multipartTypes = extend(DEFAULTS.multipartTypes, options.multipartTypes)
 
   const returnRawBody = options.returnRawBody || DEFAULTS.returnRawBody;
 
@@ -137,8 +160,11 @@ export default (options: Options = {}): Middleware => {
     try {
       const res = await parseBody(ctx);
       ctx.request.body = 'parsed' in res ? res.parsed! : {};
-      if (isUndef(ctx.request.rawBody)) {
+      if (res.raw && isUndef(ctx.request.rawBody)) {
         ctx.request.rawBody = res.raw;
+      }
+      if (res.files && isUndef(ctx.request.files)) {
+        ctx.request.files = res.files;
       }
     } catch (err) {
       if (onerror) {
@@ -158,19 +184,23 @@ export default (options: Options = {}): Middleware => {
       returnRawBody,
     };
 
-    if (enableTypes.json && ((detectJSON && detectJSON(ctx)) || ctx.request.is(jsonTypes))) {
+    if (enableTypes.json && ((detectJSON && detectJSON(ctx)) || ctx.is(jsonTypes))) {
       _options.limit = options.jsonLimit;
       return await parser.json(ctx, _options);
     }
 
-    if (enableTypes.form && ctx.request.is(formTypes)) {
+    if (enableTypes.form && ctx.is(formTypes)) {
       _options.limit = options.formLimit;
       return await parser.form(ctx, _options);
     }
 
-    if ((enableTypes as any).text && ctx.request.is(textTypes)) {
+    if (enableTypes.text && ctx.is(textTypes)) {
       _options.limit = options.textLimit;
       return await parser.text(ctx, _options);
+    }
+
+    if (enableTypes.multipart && ctx.is(multipartTypes)) {
+      return await formy(ctx, options.formidable);
     }
 
     return {} as Parsed;

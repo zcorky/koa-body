@@ -67,7 +67,9 @@
     "access": "public"
   },
   "dependencies": {
+    "@types/formidable": "^1.0.31",
     "@zcorky/is": "^1.0.1",
-    "co-body": "^6.0.0"
+    "co-body": "^6.0.0",
+    "formidable": "^1.2.1"
   }
 }

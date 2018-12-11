@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as Koa from 'koa';
 import onerror from '@koex/onerror';
 // import * as router from '@zcorky/koa-router';
@@ -325,6 +326,151 @@ describe('koa body', () => {
         .send({ foo: 'bar' })
         .set('Content-Type', 'application/json')
         .expect(200, { foo: 'bar' });
+    });
+  });
+
+  describe('multipart type', () => {
+    let database;
+
+    beforeEach(() => {
+      database = {
+        users: [
+          {
+            name: 'charlike',
+            followers: 10,
+          },
+          {
+            name: 'tunnckocore',
+            followers: 20,
+          },
+        ],
+      };
+    });
+
+    it('should receive `multipart` requests - fields on .body object', done => {
+      const app = new Koa();
+      app.use(bodyParser({
+        enableTypes: ['multipart'],
+      }));
+
+      app.use(async (ctx, next) => {
+        const user = ctx.request.body;
+
+        if (!user) {
+          ctx.status = 400;
+          return next();
+        }
+
+        database.users.push(user);
+        ctx.status = 201;
+
+        ctx.body = {
+          _files: ctx.request.files,
+          user,
+        };
+      });
+
+      request(app.callback())
+        .post('/users')
+        .field('name', 'daryl')
+        .field('followers', 30)
+        .expect(201)
+        .end((err, res) => {
+          if (err) return done(err);
+          const mostRecentUser = database.users[database.users.length - 1];
+
+          res.body.user.should.have.property('name', mostRecentUser.name);
+          res.body.user.should.have.property('followers', mostRecentUser.followers);
+
+          res.body.user.should.have.property('name', 'daryl');
+          res.body.user.should.have.property('followers', '30');
+
+          done();
+        });
+    });
+
+    it('should receive multiple fields via `multipart` on .body.files object', (done) => {
+      const app = new Koa();
+      app.use(bodyParser({
+        enableTypes: ['multipart'],
+        formidable: {
+          uploadDir: __dirname + '/temp',
+        },
+      }));
+
+      app.use(async (ctx, next) => {
+        const user = ctx.request.body;
+
+        if (!user) {
+          ctx.status = 400;
+          return next();
+        }
+
+        database.users.push(user);
+        ctx.status = 201;
+
+        ctx.body = {
+          _files: ctx.request.files,
+          user,
+        };
+      });
+
+      request(app.callback())
+        .post('/users')
+        .type('multipart/form-data')
+        .field('names', 'John')
+        .field('names', 'Paul')
+        .attach('firstField', 'package.json')
+        .attach('secondField', 'src/index.ts')
+        .attach('secondField', 'package.json')
+        .attach('thirdField', 'LICENSE')
+        .attach('thirdField', 'README.md')
+        .attach('thirdField', 'package.json')
+        .expect(201)
+        .end((err, res) => {
+          if (err) return done(err);
+
+          res.body.user.names.should.be.an.Array().and.have.lengthOf(2);
+          res.body.user.names[0].should.equal('John');
+          res.body.user.names[1].should.equal('Paul');
+          res.body._files.firstField.should.be.an.Object();
+          res.body._files.firstField.name.should.equal('package.json');
+          fs.statSync(res.body._files.firstField.path).should.be.ok();
+          fs.unlinkSync(res.body._files.firstField.path);
+
+          res.body._files.secondField.should.be.an.Array().and.have.length(2);
+
+          res.body._files.secondField.should.containDeep([{
+            name: 'index.ts',
+          }]);
+          res.body._files.secondField.should.containDeep([{
+            name: 'package.json',
+          }]);
+          fs.statSync(res.body._files.secondField[0].path).should.be.ok();
+          fs.statSync(res.body._files.secondField[1].path).should.be.ok();
+          fs.unlinkSync(res.body._files.secondField[0].path);
+          fs.unlinkSync(res.body._files.secondField[1].path);
+
+          res.body._files.thirdField.should.be.an.Array().and.have.lengthOf(3);
+
+          res.body._files.thirdField.should.containDeep([{
+            name: 'LICENSE',
+          }]);
+          res.body._files.thirdField.should.containDeep([{
+            name: 'README.md',
+          }]);
+          res.body._files.thirdField.should.containDeep([{
+            name: 'package.json',
+          }]);
+          fs.statSync(res.body._files.thirdField[0].path).should.be.ok();
+          fs.unlinkSync(res.body._files.thirdField[0].path);
+          fs.statSync(res.body._files.thirdField[1].path).should.be.ok();
+          fs.unlinkSync(res.body._files.thirdField[1].path);
+          fs.statSync(res.body._files.thirdField[2].path).should.be.ok();
+          fs.unlinkSync(res.body._files.thirdField[2].path);
+
+          done();
+        });
     });
   });
 });
