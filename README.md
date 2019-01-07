@@ -1,7 +1,7 @@
 # body
 
 [![NPM version](https://img.shields.io/npm/v/@koex/body.svg?style=flat)](https://www.npmjs.com/package/@koex/body)
-[![Coverage Status](https://img.shields.io/coveralls/koexjs/body.svg?style=flat)](https://coveralls.io/r/koexjs/body)
+[![Coverage Status](https://img.shields.io/codecov/c/github/koexjs/body/master.svg?style=flat-square)](https://codecov.io/gh/koexjs/body)
 [![Dependencies](https://img.shields.io/david/koexjs/body.svg)](https://github.com/koexjs/body)
 [![Build Status](https://travis-ci.com/koexjs/body.svg?branch=master)](https://travis-ci.com/koexjs/body)
 ![license](https://img.shields.io/github/license/koexjs/body.svg)
