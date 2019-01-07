@@ -5,7 +5,14 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "repository": "https://github.com/koexjs/body",
-  "author": "Zero",
+  "homepage": "https://github.com/koexjs/body",
+  "bugs": {
+    "url": "https://github.com/koex/body/issues"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "author": "Zero <uniquecolesmith@gmail.com> (https://moeover.com)",
   "license": "MIT",
   "scripts": {
     "build": "npm run clean && tsc",
@@ -36,6 +43,16 @@
     "tslint-jsdoc-rules": "^0.1.2",
     "typescript": "^3.2.1"
   },
+  "keywords": [
+    "koa",
+    "urlencode",
+    "multipart",
+    "json",
+    "body",
+    "parser",
+    "form",
+    "koex"
+  ],
   "files": [
     "lib/"
   ],
