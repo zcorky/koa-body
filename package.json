@@ -85,9 +85,8 @@
   },
   "dependencies": {
     "@types/formidable": "^1.0.31",
-    "@zcorky/is": "^1.0.1",
+    "@zcorky/is": "^1.0.6",
     "co-body": "^6.0.0",
-    "codecov": "^3.1.0",
     "formidable": "^1.2.1"
   }
 }
