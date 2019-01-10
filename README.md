@@ -1,9 +1,12 @@
 # body
 
 [![NPM version](https://img.shields.io/npm/v/@koex/body.svg?style=flat)](https://www.npmjs.com/package/@koex/body)
+[![NPM quality](https://npm.packagequality.com/shield/%40koex%2Fbody.svg)](https://packagequality.com/#?package=@koex/body)
 [![Coverage Status](https://img.shields.io/codecov/c/github/koexjs/body/master.svg?style=flat-square)](https://codecov.io/gh/koexjs/body)
-[![Dependencies](https://img.shields.io/david/koexjs/body.svg)](https://github.com/koexjs/body)
+[![Dependencies](https://img.shields.io/david/koexjs/body.svg?style=flat-square)](https://david-dm.org/koexjs/body)
 [![Build Status](https://travis-ci.com/koexjs/body.svg?branch=master)](https://travis-ci.com/koexjs/body)
+[![Known Vulnerabilities](https://snyk.io/test/npm/@koex/body/badge.svg?style=flat-square)](https://snyk.io/test/npm/@koex/body)
+[![NPM download](https://img.shields.io/npm/dm/@koex/body.svg?style=flat-square)](https://www.npmjs.com/package/@koex/body)
 ![license](https://img.shields.io/github/license/koexjs/body.svg)
 [![issues](https://img.shields.io/github/issues/koexjs/body.svg)](https://github.com/koexjs/body/issues)
 
