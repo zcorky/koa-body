@@ -25,6 +25,7 @@
     "@koex/onerror": "^0.0.1",
     "@koex/router": "^0.0.1",
     "@types/co-body": "^0.0.3",
+    "@types/jest": "^23.3.12",
     "@types/koa": "^2.0.47",
     "@types/node": "^10.9.4",
     "@types/supertest": "^2.0.7",
