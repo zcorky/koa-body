@@ -60,25 +60,6 @@
       "pre-commit": "npm test"
     }
   },
-  "nyc": {
-    "check-coverage": true,
-    "lines": 60,
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "**/*.d.ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register",
-      "source-map-support/register"
-    ],
-    "sourceMap": true,
-    "instrument": true
-  },
   "jest": {
     "roots": [
       "test"
