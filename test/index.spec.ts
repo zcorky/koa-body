@@ -4,7 +4,7 @@ import * as Koa from 'koa';
 import onerror from '@koex/onerror';
 // import * as router from '@zcorky/koa-router';
 import * as request from 'supertest';
-import 'should';
+import * as should from 'should';
 
 import bodyParser, { Options } from '../src';
 
@@ -34,7 +34,7 @@ describe('koa body', () => {
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .post('/')
         .send({ foo: 'bar' })
         .expect(200, { foo: 'bar' });
@@ -47,7 +47,7 @@ describe('koa body', () => {
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .post('/')
         .set('Accept', 'application/vnd.api+json')
         .set('Content-Type', 'application/vnd.api+json')
@@ -62,7 +62,7 @@ describe('koa body', () => {
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .patch('/')
         .set('Content-Type', 'application/json-patch+json')
         .send('[{"op": "add", "path": "/foo", "value": "bar"}]')
@@ -249,7 +249,7 @@ describe('koa body', () => {
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .post('/')
         .type('json')
         .send({ foo: 'bar' })
@@ -436,7 +436,7 @@ describe('koa body', () => {
           res.body.user.names[1].should.equal('Paul');
           res.body._files.firstField.should.be.an.Object();
           res.body._files.firstField.name.should.equal('package.json');
-          fs.statSync(res.body._files.firstField.path).should.be.ok();
+          should(fs.statSync(res.body._files.firstField.path)).be.ok();
           fs.unlinkSync(res.body._files.firstField.path);
 
           res.body._files.secondField.should.be.an.Array().and.have.length(2);
@@ -447,8 +447,8 @@ describe('koa body', () => {
           res.body._files.secondField.should.containDeep([{
             name: 'package.json',
           }]);
-          fs.statSync(res.body._files.secondField[0].path).should.be.ok();
-          fs.statSync(res.body._files.secondField[1].path).should.be.ok();
+          should(fs.statSync(res.body._files.secondField[0].path)).be.ok();
+          should(fs.statSync(res.body._files.secondField[1].path)).be.ok();
           fs.unlinkSync(res.body._files.secondField[0].path);
           fs.unlinkSync(res.body._files.secondField[1].path);
 
@@ -463,11 +463,11 @@ describe('koa body', () => {
           res.body._files.thirdField.should.containDeep([{
             name: 'package.json',
           }]);
-          fs.statSync(res.body._files.thirdField[0].path).should.be.ok();
+          should(fs.statSync(res.body._files.thirdField[0].path)).be.ok();
           fs.unlinkSync(res.body._files.thirdField[0].path);
-          fs.statSync(res.body._files.thirdField[1].path).should.be.ok();
+          should(fs.statSync(res.body._files.thirdField[1].path)).be.ok();
           fs.unlinkSync(res.body._files.thirdField[1].path);
-          fs.statSync(res.body._files.thirdField[2].path).should.be.ok();
+          should(fs.statSync(res.body._files.thirdField[2].path)).be.ok();
           fs.unlinkSync(res.body._files.thirdField[2].path);
 
           done();
