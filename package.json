@@ -1,6 +1,6 @@
 {
   "name": "@koex/body",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "body parser for koa extend",
   "main": "lib/index.js",
   "module": "lib/index.js",
