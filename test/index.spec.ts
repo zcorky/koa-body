@@ -4,7 +4,6 @@ import * as Koa from 'koa';
 import onerror from '@koex/onerror';
 // import * as router from '@zcorky/koa-router';
 import * as request from 'supertest';
-import 'should';
 
 import bodyParser, { Options } from '../src';
 
@@ -29,12 +28,12 @@ describe('koa body', () => {
       app.use(bodyParser());
 
       app.use(async ctx => {
-        ctx.request.body.should.eql({ foo: 'bar' });
-        ctx.request.rawBody.should.equal('{"foo":"bar"}');
+        expect(ctx.request.body).toEqual({ foo: 'bar' });
+        expect(ctx.request.rawBody).toBe('{"foo":"bar"}');
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .post('/')
         .send({ foo: 'bar' })
         .expect(200, { foo: 'bar' });
@@ -42,12 +41,12 @@ describe('koa body', () => {
 
     it('should parse json body with json-api headers ok', async () => {
       app.use(async ctx => {
-        ctx.request.body.should.eql({ foo: 'bar' });
-        ctx.request.rawBody.should.equal('{"foo":"bar"}');
+        expect(ctx.request.body).toEqual({ foo: 'bar' });
+        expect(ctx.request.rawBody).toEqual('{"foo":"bar"}');
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .post('/')
         .set('Accept', 'application/vnd.api+json')
         .set('Content-Type', 'application/vnd.api+json')
@@ -57,12 +56,12 @@ describe('koa body', () => {
 
     it('should parse json patch', async () => {
       app.use(async ctx => {
-        ctx.request.body.should.eql([{op: 'add', path: '/foo', value: 'bar' }]);
-        ctx.request.rawBody.should.equal('[{"op": "add", "path": "/foo", "value": "bar"}]');
+        expect(ctx.request.body).toEqual([{op: 'add', path: '/foo', value: 'bar' }]);
+        expect(ctx.request.rawBody).toBe('[{"op": "add", "path": "/foo", "value": "bar"}]');
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .patch('/')
         .set('Content-Type', 'application/json-patch+json')
         .send('[{"op": "add", "path": "/foo", "value": "bar"}]')
@@ -93,7 +92,7 @@ describe('koa body', () => {
       _app.use(bodyParser({ jsonLimit: 100 }));
 
       _app.use(async ctx => {
-        ctx.request.rawBody.should.equal('"invalid"');
+        expect(ctx.request.rawBody).toBe('"invalid"');
         ctx.body = ctx.request.body;
       });
 
@@ -114,8 +113,8 @@ describe('koa body', () => {
       });
 
       _app.use(async ctx => {
-        ctx.request.body.should.eql({ foo: 'bar' });
-        ctx.request.rawBody.should.equal('{"foo":"bar"}');
+        expect(ctx.request.body).toEqual({ foo: 'bar' });
+        expect(ctx.request.rawBody).toBe('{"foo":"bar"}');
         ctx.body = ctx.request.body;
       });
 
@@ -133,11 +132,11 @@ describe('koa body', () => {
       });
 
       _app.use(async ctx => {
-        ctx.request.type.should.equal('application/x-www-form-urlencoded');
-        ctx.request.is(['application/x-www-form-urlencoded']).should.equal('application/x-www-form-urlencoded');
+        expect(ctx.request.type).toBe('application/x-www-form-urlencoded');
+        expect(ctx.request.is(['application/x-www-form-urlencoded'])).toBe('application/x-www-form-urlencoded');
 
-        ctx.request.body.should.eql({ '{"foo":"bar"}': '' });
-        ctx.request.rawBody.should.equal('{"foo":"bar"}');
+        expect(ctx.request.body).toEqual({ '{"foo":"bar"}': '' });
+        expect(ctx.request.rawBody).toBe('{"foo":"bar"}');
         ctx.body = ctx.request.body;
       });
 
@@ -155,9 +154,9 @@ describe('koa body', () => {
     it('should parse form body ok', async () => {
       app = App();
       app.use(async ctx => {
-        ctx.get('Content-Type').should.equal('application/x-www-form-urlencoded');
-        ctx.request.body.should.eql({ foo: { bar: 'baz' } });
-        ctx.request.rawBody.should.equal('foo%5Bbar%5D=baz');
+        expect(ctx.get('Content-Type')).toBe('application/x-www-form-urlencoded');
+        expect(ctx.request.body).toEqual({ foo: { bar: 'baz' } });
+        expect(ctx.request.rawBody).toBe('foo%5Bbar%5D=baz');
         ctx.body = ctx.request.body;
       });
 
@@ -188,9 +187,9 @@ describe('koa body', () => {
         enableTypes: ['text', 'json'],
       });
       app.use(async ctx => {
-        ctx.get('Content-Type').should.equal('text/plain');
-        ctx.request.body.should.equal('body');
-        ctx.request.rawBody.should.equal('body');
+        expect(ctx.get('Content-Type')).toBe('text/plain');
+        expect(ctx.request.body).toBe('body');
+        expect(ctx.request.rawBody).toBe('body');
         ctx.body = ctx.request.body;
       });
 
@@ -224,9 +223,9 @@ describe('koa body', () => {
       });
 
       app.use(async ctx => {
-        ctx.get('Content-Type').should.equal('application/x-javascript');
-        ctx.request.type.should.equal('application/x-javascript');
-        ctx.request.is(['application/x-javascript']).should.equal('application/x-javascript');
+        expect(ctx.get('Content-Type')).toBe('application/x-javascript');
+        expect(ctx.request.type).toBe('application/x-javascript');
+        expect(ctx.request.is(['application/x-javascript'])).toBe('application/x-javascript');
         ctx.body = ctx.request.body;
       });
 
@@ -249,7 +248,7 @@ describe('koa body', () => {
         ctx.body = ctx.request.body;
       });
 
-      await request(app.listen())
+      await request(app.callback())
         .post('/')
         .type('json')
         .send({ foo: 'bar' })
@@ -262,7 +261,7 @@ describe('koa body', () => {
 
     it('should get body null', async () => {
       app.use(async ctx => {
-        ctx.request.body.should.eql({});
+        expect(ctx.request.body).toEqual({});
         ctx.body = ctx.request.body;
       });
 
@@ -297,7 +296,7 @@ describe('koa body', () => {
       });
       app.use(bodyParser());
       app.use(async ctx => {
-        ctx.request.should.not.have.property('rawBody');
+        expect(ctx.request.rawBody).toBe(undefined);
         ctx.body = ctx.request.body ? 'parsed' : 'empty';
       });
 
@@ -318,7 +317,7 @@ describe('koa body', () => {
       });
       app.use(bodyParser());
       app.use(async ctx => {
-        ctx.request.rawBody.should.equal('xxxx');
+        expect(ctx.request.rawBody).toBe('xxxx');
         ctx.body = ctx.request.body;
       });
 
@@ -380,11 +379,11 @@ describe('koa body', () => {
           if (err) return done(err);
           const mostRecentUser = database.users[database.users.length - 1];
 
-          res.body.user.should.have.property('name', mostRecentUser.name);
-          res.body.user.should.have.property('followers', mostRecentUser.followers);
+          expect(res.body.user).toHaveProperty('name', mostRecentUser.name);
+          expect(res.body.user).toHaveProperty('followers', mostRecentUser.followers);
 
-          res.body.user.should.have.property('name', 'daryl');
-          res.body.user.should.have.property('followers', '30');
+          expect(res.body.user).toHaveProperty('name', 'daryl');
+          expect(res.body.user).toHaveProperty('followers', '30');
 
           done();
         });
@@ -431,43 +430,48 @@ describe('koa body', () => {
         .end((err, res) => {
           if (err) return done(err);
 
-          res.body.user.names.should.be.an.Array().and.have.lengthOf(2);
-          res.body.user.names[0].should.equal('John');
-          res.body.user.names[1].should.equal('Paul');
-          res.body._files.firstField.should.be.an.Object();
-          res.body._files.firstField.name.should.equal('package.json');
-          fs.statSync(res.body._files.firstField.path).should.be.ok();
+          expect(res.body.user.names.length).toBe(2);
+          expect(res.body.user.names[0]).toBe('John');
+          expect(res.body.user.names[1]).toBe('Paul');
+          expect(typeof res.body._files.firstField).toBe('object');
+          expect(res.body._files.firstField.name).toBe('package.json');
+          expect(fs.statSync(res.body._files.firstField.path)).not.toBeNull();
           fs.unlinkSync(res.body._files.firstField.path);
 
-          res.body._files.secondField.should.be.an.Array().and.have.length(2);
+          expect(res.body._files.secondField.length).toBe(2);
 
-          res.body._files.secondField.should.containDeep([{
-            name: 'index.ts',
-          }]);
-          res.body._files.secondField.should.containDeep([{
-            name: 'package.json',
-          }]);
-          fs.statSync(res.body._files.secondField[0].path).should.be.ok();
-          fs.statSync(res.body._files.secondField[1].path).should.be.ok();
+          // expect(res.body._files.secondField).toContain([{
+          //   name: 'index.ts',
+          // }]);
+          expect(res.body._files.secondField[0].name).toEqual('index.ts');
+          // expect(res.body._files.secondField).toContainEqual([{
+          //   name: 'package.json',
+          // }]);
+          expect(res.body._files.secondField[1].name).toEqual('package.json');
+          expect(fs.statSync(res.body._files.secondField[0].path)).not.toBeNull();
+          expect(fs.statSync(res.body._files.secondField[1].path)).not.toBeNull();
           fs.unlinkSync(res.body._files.secondField[0].path);
           fs.unlinkSync(res.body._files.secondField[1].path);
 
-          res.body._files.thirdField.should.be.an.Array().and.have.lengthOf(3);
+          expect(res.body._files.thirdField.length).toBe(3);
 
-          res.body._files.thirdField.should.containDeep([{
-            name: 'LICENSE',
-          }]);
-          res.body._files.thirdField.should.containDeep([{
-            name: 'README.md',
-          }]);
-          res.body._files.thirdField.should.containDeep([{
-            name: 'package.json',
-          }]);
-          fs.statSync(res.body._files.thirdField[0].path).should.be.ok();
+          // expect(res.body._files.thirdField).toContainEqual([{
+          //   name: 'LICENSE',
+          // }]);
+          expect(res.body._files.thirdField[0].name).toBe('LICENSE');
+          // expect(res.body._files.thirdField).toContainEqual([{
+          //   name: 'README.md',
+          // }]);
+          expect(res.body._files.thirdField[1].name).toBe('README.md');
+          // expect(res.body._files.thirdField).toContainEqual([{
+          //   name: 'package.json',
+          // }]);
+          expect(res.body._files.thirdField[2].name).toBe('package.json');
+          expect(fs.statSync(res.body._files.thirdField[0].path)).not.toBeNull();
           fs.unlinkSync(res.body._files.thirdField[0].path);
-          fs.statSync(res.body._files.thirdField[1].path).should.be.ok();
+          expect(fs.statSync(res.body._files.thirdField[1].path)).not.toBeNull();
           fs.unlinkSync(res.body._files.thirdField[1].path);
-          fs.statSync(res.body._files.thirdField[2].path).should.be.ok();
+          expect(fs.statSync(res.body._files.thirdField[2].path)).not.toBeNull();
           fs.unlinkSync(res.body._files.thirdField[2].path);
 
           done();
