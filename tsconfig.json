@@ -8,7 +8,7 @@
         "noUnusedLocals": true,
         "noImplicitAny": false,
         "outDir": "lib",
-        "lib": ["es2018"],
+        "lib": ["es2018", "dom"],
         "declaration": true,
         "sourceMap": false,
         "removeComments": true,
