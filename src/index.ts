@@ -154,7 +154,7 @@ export default (options: Options = {}): Middleware => {
 
   const returnRawBody = options.returnRawBody || DEFAULTS.returnRawBody;
 
-  return async function bodyParser(ctx: Context, next: () => Promise<void>) {
+  return async function koexBodyParser(ctx: Context, next: () => Promise<void>) {
     if ((ctx.request as any).body !== undefined) return await next();
     if (ctx.disableBodyParser) return await next();
     try {
