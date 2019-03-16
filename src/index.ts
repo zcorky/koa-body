@@ -6,7 +6,7 @@ import { formy, Options as MultipartOptions, Multipart as MultipartReturn } from
 
 declare module 'koa' {
   export interface Request {
-    body: Body;
+    body: any;
     rawBody: string;
     files: MultipartReturn['files'];
   }
@@ -14,12 +14,8 @@ declare module 'koa' {
 
 export type SupportType = 'json' | 'form' | 'text' | 'multipart';
 
-export interface Body {
-  [key: string]: any;
-};
-
 export interface Parsed {
-  parsed?: Body;
+  parsed?: any;
   raw?: string;
   files?: MultipartReturn['files'];
 };
