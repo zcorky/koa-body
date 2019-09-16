@@ -1,4 +1,4 @@
-import { Context, Middleware } from 'koa';
+import { Context } from 'koa';
 import { undefined as isUndef } from '@zcorky/is';
 import * as parser from 'co-body';
 
@@ -136,7 +136,7 @@ const DEFAULTS = {
 /**
  * Add X-Response-Time header field.
  */
-export default (options: Options = {}): Middleware => {
+export default (options: Options = {}) => {
   const detectJSON = options.detectJSON;
   const onerror = options.onerror;
   const enableTypes = isUndef(options.enableTypes)
